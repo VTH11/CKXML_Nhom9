@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachPhim>
+  <Phim>
+    <maPhim>P001</maPhim>
+    <tenPhim>Mai</tenPhim>
+    <theLoai>Tâm lý, Tình cảm</theLoai>
+    <thoiLuong>131</thoiLuong>
+    <daoDien>Trấn Thành</daoDien>
+    <apPhich>posters/mai.jpg</apPhich>
+  </Phim>
+  <Phim>
+    <maPhim>P002</maPhim>
+    <tenPhim>Lật Mặt 7: Một Điều Ước</tenPhim>
+    <theLoai>Gia đình, Hài</theLoai>
+    <thoiLuong>138</thoiLuong>
+    <daoDien>Lý Hải</daoDien>
+    <apPhich>posters/latmat7.jpg</apPhich>
+  </Phim>
+  <Phim>
+    <maPhim>P003</maPhim>
+    <tenPhim>Dune: Hành Tinh Cát - Phần 2</tenPhim>
+    <theLoai>Khoa học viễn tưởng, Hành động</theLoai>
+    <thoiLuong>166</thoiLuong>
+    <daoDien>Denis Villeneuve</daoDien>
+    <apPhich>posters/dune2.jpg</apPhich>
+  </Phim>
+  <Phim>
+    <maPhim>P004</maPhim>
+    <tenPhim>Kung Fu Panda 4</tenPhim>
+    <theLoai>Hoạt hình, Hài, Phiêu lưu</theLoai>
+    <thoiLuong>94</thoiLuong>
+    <daoDien>Mike Mitchell</daoDien>
+    <apPhich>posters/kungfupanda4.jpg</apPhich>
+  </Phim>
+  <Phim>
+    <maPhim>P005</maPhim>
+    <tenPhim>Exhuma: Quật Mộ Trùng Ma</tenPhim>
+    <theLoai>Kinh dị, Bí ẩn</theLoai>
+    <thoiLuong>134</thoiLuong>
+    <daoDien>Jang Jae-hyun</daoDien>
+    <apPhich>posters/exhuma.jpg</apPhich>
+  </Phim>
+</DanhSachPhim>
+

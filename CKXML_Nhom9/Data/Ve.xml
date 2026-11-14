@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachVe>
+  <Ve>
+    <maVe>V0001</maVe>
+    <maSuat>SC001</maSuat>
+    <maNV>NV002</maNV>
+    <viTriGhe>A01</viTriGhe>
+    <giaVe>90000</giaVe>
+    <ngayBan>2026-11-12T08:30:00</ngayBan>
+  </Ve>
+  <Ve>
+    <maVe>V0002</maVe>
+    <maSuat>SC001</maSuat>
+    <maNV>NV002</maNV>
+    <viTriGhe>A02</viTriGhe>
+    <giaVe>90000</giaVe>
+    <ngayBan>2026-11-12T08:30:00</ngayBan>
+  </Ve>
+  <Ve>
+    <maVe>V0003</maVe>
+    <maSuat>SC001</maSuat>
+    <maNV>NV002</maNV>
+    <viTriGhe>D05</viTriGhe>
+    <giaVe>90000</giaVe>
+    <ngayBan>2026-11-12T08:40:15</ngayBan>
+  </Ve>
+  <Ve>
+    <maVe>V0004</maVe>
+    <maSuat>SC002</maSuat>
+    <maNV>NV002</maNV>
+    <viTriGhe>C04</viTriGhe>
+    <giaVe>110000</giaVe>
+    <ngayBan>2026-11-12T10:15:00</ngayBan>
+  </Ve>
+  <Ve>
+    <maVe>V0005</maVe>
+    <maSuat>SC002</maSuat>
+    <maNV>NV002</maNV>
+    <viTriGhe>C05</viTriGhe>
+    <giaVe>110000</giaVe>
+    <ngayBan>2026-11-12T10:15:00</ngayBan>
+  </Ve>
+  <Ve>
+    <maVe>V0006</maVe>
+    <maSuat>SC003</maSuat>
+    <maNV>NV003</maNV>
+    <viTriGhe>B03</viTriGhe>
+    <giaVe>85000</giaVe>
+    <ngayBan>2026-11-12T09:20:30</ngayBan>
+  </Ve>
+</DanhSachVe>
+

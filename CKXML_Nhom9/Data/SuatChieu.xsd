@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DanhSachSuatChieu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SuatChieu" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="maSuat">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="SC\d{3,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="maPhim">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="P\d{3,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="maPhong">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="PC\d{2,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ngayChieu" type="xs:date" />
+              <xs:element name="gioBatDau" type="xs:time" />
+              <xs:element name="giaVe">
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal">
+                    <xs:minInclusive value="0" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="PK_SuatChieu">
+      <xs:selector xpath="SuatChieu" />
+      <xs:field xpath="maSuat" />
+    </xs:key>
+  </xs:element>
+</xs:schema>
+

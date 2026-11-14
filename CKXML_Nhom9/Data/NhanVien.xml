@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachNhanVien>
+  <NhanVien>
+    <maNV>NV001</maNV>
+    <hoTen>Nguyễn Văn An</hoTen>
+    <gioiTinh>Nam</gioiTinh>
+    <ngaySinh>1995-03-15</ngaySinh>
+    <diaChi>123 Lê Lợi, Quận 1, TP.HCM</diaChi>
+    <soDienThoai>0901234567</soDienThoai>
+    <chucVu>Quản lý rạp</chucVu>
+  </NhanVien>
+  <NhanVien>
+    <maNV>NV002</maNV>
+    <hoTen>Trần Thị Bích</hoTen>
+    <gioiTinh>Nữ</gioiTinh>
+    <ngaySinh>2000-07-22</ngaySinh>
+    <diaChi>45 Nguyễn Huệ, Quận 1, TP.HCM</diaChi>
+    <soDienThoai>0912345678</soDienThoai>
+    <chucVu>Nhân viên bán vé</chucVu>
+  </NhanVien>
+  <NhanVien>
+    <maNV>NV003</maNV>
+    <hoTen>Lê Hoàng Nam</hoTen>
+    <gioiTinh>Nam</gioiTinh>
+    <ngaySinh>1999-11-10</ngaySinh>
+    <diaChi>78 Điện Biên Phủ, Bình Thạnh, TP.HCM</diaChi>
+    <soDienThoai>0987654321</soDienThoai>
+    <chucVu>Nhân viên bán vé</chucVu>
+  </NhanVien>
+</DanhSachNhanVien>
+

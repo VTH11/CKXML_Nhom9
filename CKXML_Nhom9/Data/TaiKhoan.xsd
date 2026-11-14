@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DanhSachTaiKhoan">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="TaiKhoan" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="tenDangNhap">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="matKhau">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:length value="64" />
+                    <xs:pattern value="[0-9a-fA-F]{64}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="quyenHan">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:enumeration value="1" />
+                    <xs:enumeration value="2" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="maNV">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="NV\d{3,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="PK_TaiKhoan">
+      <xs:selector xpath="TaiKhoan" />
+      <xs:field xpath="tenDangNhap" />
+    </xs:key>
+  </xs:element>
+</xs:schema>
+

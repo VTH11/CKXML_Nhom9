@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DanhSachPhim">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Phim" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="maPhim">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="P\d{3,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="tenPhim">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="theLoai">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="thoiLuong">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minExclusive value="0" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="daoDien" type="xs:string" />
+              <xs:element name="apPhich" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="PK_Phim">
+      <xs:selector xpath="Phim" />
+      <xs:field xpath="maPhim" />
+    </xs:key>
+  </xs:element>
+</xs:schema>
+

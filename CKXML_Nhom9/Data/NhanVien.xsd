@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DanhSachNhanVien">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="NhanVien" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="maNV">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="NV\d{3,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="hoTen">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="gioiTinh">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="Nam" />
+                    <xs:enumeration value="Nữ" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ngaySinh" type="xs:date" />
+              <xs:element name="diaChi" type="xs:string" />
+              <xs:element name="soDienThoai">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="\d{10}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="chucVu" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="PK_NhanVien">
+      <xs:selector xpath="NhanVien" />
+      <xs:field xpath="maNV" />
+    </xs:key>
+  </xs:element>
+</xs:schema>
+

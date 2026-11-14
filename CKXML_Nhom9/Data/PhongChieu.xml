@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachPhongChieu>
+  <PhongChieu>
+    <maPhong>PC01</maPhong>
+    <tenPhong>Phòng Chiếu 01 (IMAX)</tenPhong>
+    <soHang>8</soHang>
+    <soCot>10</soCot>
+    <tongSoGhe>80</tongSoGhe>
+  </PhongChieu>
+  <PhongChieu>
+    <maPhong>PC02</maPhong>
+    <tenPhong>Phòng Chiếu 02 (Standard)</tenPhong>
+    <soHang>6</soHang>
+    <soCot>8</soCot>
+    <tongSoGhe>48</tongSoGhe>
+  </PhongChieu>
+  <PhongChieu>
+    <maPhong>PC03</maPhong>
+    <tenPhong>Phòng Chiếu 03 (VIP)</tenPhong>
+    <soHang>5</soHang>
+    <soCot>6</soCot>
+    <tongSoGhe>30</tongSoGhe>
+  </PhongChieu>
+</DanhSachPhongChieu>
+

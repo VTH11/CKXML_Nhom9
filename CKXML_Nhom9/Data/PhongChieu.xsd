@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DanhSachPhongChieu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="PhongChieu" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="maPhong">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="PC\d{2,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="tenPhong">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="soHang">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="1" />
+                    <xs:maxInclusive value="26" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="soCot">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="1" />
+                    <xs:maxInclusive value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="tongSoGhe">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="1" />
+                    <xs:maxInclusive value="780" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="PK_PhongChieu">
+      <xs:selector xpath="PhongChieu" />
+      <xs:field xpath="maPhong" />
+    </xs:key>
+  </xs:element>
+</xs:schema>
+

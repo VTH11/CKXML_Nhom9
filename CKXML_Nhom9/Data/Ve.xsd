@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DanhSachVe">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Ve" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="maVe">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="V\d{4,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="maSuat">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="SC\d{3,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="maNV">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="NV\d{3,}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="viTriGhe">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="[A-Z]\d{2}" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="giaVe">
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal">
+                    <xs:minInclusive value="0" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ngayBan" type="xs:dateTime" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="PK_Ve">
+      <xs:selector xpath="Ve" />
+      <xs:field xpath="maVe" />
+    </xs:key>
+    <xs:unique name="UQ_SuatChieu_ViTriGhe">
+      <xs:selector xpath="Ve" />
+      <xs:field xpath="maSuat" />
+      <xs:field xpath="viTriGhe" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>
+
