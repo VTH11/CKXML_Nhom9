@@ -113,7 +113,10 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuBanVe_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Bán vé (frmBanVe) sẽ được xây dựng ở Giai đoạn 5.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (frmBanVe frm = new frmBanVe())
+            {
+                frm.ShowDialog(this);
+            }
         }
 
         private void mnuXemLichChieu_Click(object? sender, EventArgs e)

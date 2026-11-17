@@ -345,8 +345,8 @@ namespace CKXML_Nhom9.Forms
             if (cbbPhong.Items.Count > 0)
                 cbbPhong.SelectedIndex = 0;
 
-            dtpNgayChieu.Value = new DateTime(2026, 11, 12);
-            dtpGioBatDau.Value = new DateTime(2026, 11, 12, 18, 0, 0);
+            dtpNgayChieu.Value = DateTime.Today;
+            dtpGioBatDau.Value = DateTime.Today.AddHours(18);
             txtGiaVe.Text = "90000";
             CapNhatGioKetThucDuKien();
             dgvSuatChieu.ClearSelection();
@@ -670,9 +670,10 @@ namespace CKXML_Nhom9.Forms
         /// </summary>
         private void btnKiemThuThuatToan_Click(object? sender, EventArgs e)
         {
-            // Các ca kiểm thử đối chiếu với suất mẫu SC001 có sẵn trong SuatChieu.xml:
-            // SC001: Phòng PC01, Ngày 2026-11-12, Phim P001 (Mai - 131 phút), Bắt đầu 09:00:00 -> Kết thúc (+15p) = 11:26:00
-            // và SC002: Phòng PC01, Ngày 2026-11-12, Phim P003 (166 phút), Bắt đầu 13:00:00 -> Kết thúc (+15p) = 16:01:00
+            string ngayMau = XmlHelper.LayGiaTriXPath(TEN_FILE_XML, "//SuatChieu[maSuat='SC001']/ngayChieu");
+            if (string.IsNullOrEmpty(ngayMau))
+                ngayMau = DateTime.Today.ToString("yyyy-MM-dd");
+
             DataTable dtTest = new DataTable();
             dtTest.Columns.Add("STT", typeof(string));
             dtTest.Columns.Add("TenCaKiemThu", typeof(string));
@@ -690,7 +691,7 @@ namespace CKXML_Nhom9.Forms
                     STT = "Ca 1",
                     Ten = "Trùng hoàn toàn",
                     Phong = "PC01",
-                    Ngay = "2026-11-12",
+                    Ngay = ngayMau,
                     GioBD = new TimeSpan(9, 0, 0),
                     ThoiLuong = 131,
                     KyVongXungDot = true,
@@ -701,7 +702,7 @@ namespace CKXML_Nhom9.Forms
                     STT = "Ca 2",
                     Ten = "Chồng đầu (kết thúc lấn vào đầu suất cũ)",
                     Phong = "PC01",
-                    Ngay = "2026-11-12",
+                    Ngay = ngayMau,
                     GioBD = new TimeSpan(8, 0, 0),
                     ThoiLuong = 94, // 08:00 + 94p + 15p = 09:49 > 09:00
                     KyVongXungDot = true,
@@ -712,7 +713,7 @@ namespace CKXML_Nhom9.Forms
                     STT = "Ca 3",
                     Ten = "Chồng cuối (bắt đầu khi suất cũ đang chiếu/dọn rạp)",
                     Phong = "PC01",
-                    Ngay = "2026-11-12",
+                    Ngay = ngayMau,
                     GioBD = new TimeSpan(11, 15, 0),
                     ThoiLuong = 60, // 11:15 < 11:26 (SC001 kết thúc dọn rạp lúc 11:26)
                     KyVongXungDot = true,
@@ -723,7 +724,7 @@ namespace CKXML_Nhom9.Forms
                     STT = "Ca 4",
                     Ten = "Nằm gọn bên trong suất cũ",
                     Phong = "PC01",
-                    Ngay = "2026-11-12",
+                    Ngay = ngayMau,
                     GioBD = new TimeSpan(9, 30, 0),
                     ThoiLuong = 90, // 09:30 -> 11:15 nằm trọn trong [09:00, 11:26]
                     KyVongXungDot = true,
@@ -734,7 +735,7 @@ namespace CKXML_Nhom9.Forms
                     STT = "Ca 5",
                     Ten = "Sát nhau đúng 15 phút dọn rạp (Biên tiếp giáp)",
                     Phong = "PC01",
-                    Ngay = "2026-11-12",
+                    Ngay = ngayMau,
                     GioBD = new TimeSpan(11, 26, 0),
                     ThoiLuong = 75, // 11:26 + 75p + 15p = 12:56 (vừa sát sau SC001 11:26, trước SC002 13:00)
                     KyVongXungDot = false,
@@ -745,7 +746,7 @@ namespace CKXML_Nhom9.Forms
                     STT = "Ca 6",
                     Ten = "Khác phòng cùng khung giờ",
                     Phong = "PC03",
-                    Ngay = "2026-11-12",
+                    Ngay = ngayMau,
                     GioBD = new TimeSpan(9, 0, 0),
                     ThoiLuong = 131, // Cùng giờ 09:00 -> 11:26 nhưng ở phòng PC03
                     KyVongXungDot = false,
