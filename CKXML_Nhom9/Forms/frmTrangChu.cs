@@ -118,32 +118,53 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuXemLichChieu_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Xem lịch chiếu sẽ được xây dựng ở Giai đoạn 4 & 6.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (frmSuatChieu frm = new frmSuatChieu(cheDoChiXem: true))
+            {
+                frm.ShowDialog(this);
+            }
         }
 
         private void mnuQuanLyPhim_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Quản lý phim (frmPhim) sẽ được xây dựng ở Giai đoạn 3.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (frmPhim frm = new frmPhim())
+            {
+                frm.ShowDialog(this);
+            }
         }
 
         private void mnuQuanLyPhongChieu_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Quản lý phòng chiếu (frmPhongChieu) sẽ được xây dựng ở Giai đoạn 3.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (frmPhongChieu frm = new frmPhongChieu())
+            {
+                frm.ShowDialog(this);
+            }
         }
 
         private void mnuQuanLySuatChieu_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Quản lý suất chiếu (frmSuatChieu) sẽ được xây dựng ở Giai đoạn 4.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (frmSuatChieu frm = new frmSuatChieu(cheDoChiXem: false))
+            {
+                frm.ShowDialog(this);
+            }
         }
 
         private void mnuQuanLyNhanVien_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Quản lý nhân viên (frmNhanVien) sẽ được xây dựng ở Giai đoạn 3.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (frmNhanVien frm = new frmNhanVien())
+            {
+                frm.ShowDialog(this);
+                HienThiThongTinPhien();
+            }
         }
 
         private void mnuQuanLyTaiKhoan_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Quản lý tài khoản sẽ được xây dựng ở Giai đoạn 7.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (frmTaiKhoan frm = new frmTaiKhoan())
+            {
+                frm.ShowDialog(this);
+                HienThiThongTinPhien();
+                ApDungPhanQuyen();
+            }
         }
 
         private void mnuBaoCaoDoanhThu_Click(object? sender, EventArgs e)

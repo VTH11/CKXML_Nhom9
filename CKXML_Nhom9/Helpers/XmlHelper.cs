@@ -64,9 +64,18 @@ namespace CKXML_Nhom9.Helpers
             return sb.ToString();
         }
 
+        private const string CHU_HOA_VIET = "ABCDEFGHIJKLMNOPQRSTUVWXYZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ";
+        private const string CHU_THUONG_VIET = "abcdefghijklmnopqrstuvwxyzàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ";
+
         /// <summary>
-        /// Băm mật khẩu theo thuật toán SHA-256, trả về chuỗi hex 64 ký tự chữ thường.
+        /// Tạo biểu thức điều kiện XPath contains() không phân biệt chữ hoa/thường (hỗ trợ tiếng Việt) và chống XPath Injection.
         /// </summary>
+        public static string BieuThucChuaXPath(string tenTruong, string tuKhoa)
+        {
+            string tuKhoaThuong = (tuKhoa ?? string.Empty).Trim().ToLowerInvariant();
+            string escaped = EscapeXPathLiteral(tuKhoaThuong);
+            return $"contains(translate({tenTruong}, '{CHU_HOA_VIET}', '{CHU_THUONG_VIET}'), {escaped})";
+        }
         public static string BamMatKhauSHA256(string matKhau)
         {
             if (matKhau == null)
