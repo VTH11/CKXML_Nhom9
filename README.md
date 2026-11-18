@@ -143,7 +143,7 @@ CKXML_Nhom9/                        # Thư mục gốc của kho mã nguồn
 
 - **Sinh viên thực hiện**:
   1. **Nguyễn Tấn Thắng** – Mã sinh viên: `2415141122119`
-  2. **Văn Thanh Hoàng**
+  2. **Văn Thanh Hoàng** – Mã sinh viên: `2415141122105`
 - **Học phần**: Công nghệ XML – **Lớp học phần**: `126CNX02`
 - **Giảng viên hướng dẫn**: **Th.S Ngô Lê Quân**
 - **Trường**: Trường Đại học Sư phạm Kỹ thuật – Đại học Đà Nẵng
