@@ -129,6 +129,11 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuQuanLyPhim_Click(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Chức năng Quản lý phim chỉ dành cho Quản lý!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             using (frmPhim frm = new frmPhim())
             {
                 frm.ShowDialog(this);
@@ -137,6 +142,11 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuQuanLyPhongChieu_Click(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Chức năng Quản lý phòng chiếu chỉ dành cho Quản lý!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             using (frmPhongChieu frm = new frmPhongChieu())
             {
                 frm.ShowDialog(this);
@@ -145,6 +155,11 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuQuanLySuatChieu_Click(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Chức năng Quản lý suất chiếu chỉ dành cho Quản lý!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             using (frmSuatChieu frm = new frmSuatChieu(cheDoChiXem: false))
             {
                 frm.ShowDialog(this);
@@ -153,6 +168,11 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuQuanLyNhanVien_Click(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Chức năng Quản lý nhân viên chỉ dành cho Quản lý!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             using (frmNhanVien frm = new frmNhanVien())
             {
                 frm.ShowDialog(this);
@@ -162,6 +182,11 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuQuanLyTaiKhoan_Click(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Chức năng Quản lý tài khoản chỉ dành cho Quản lý!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             using (frmTaiKhoan frm = new frmTaiKhoan())
             {
                 frm.ShowDialog(this);
@@ -172,7 +197,16 @@ namespace CKXML_Nhom9.Forms
 
         private void mnuBaoCaoDoanhThu_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Báo cáo doanh thu (XSLT) sẽ được xây dựng ở Giai đoạn 6.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Chức năng Báo cáo doanh thu chỉ dành cho Quản lý!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (frmBaoCaoDoanhThu frm = new frmBaoCaoDoanhThu())
+            {
+                frm.ShowDialog(this);
+            }
         }
     }
 }

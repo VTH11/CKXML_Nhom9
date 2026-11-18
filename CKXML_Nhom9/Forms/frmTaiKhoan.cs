@@ -20,6 +20,13 @@ namespace CKXML_Nhom9.Forms
 
         private void frmTaiKhoan_Load(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng Quản lý tài khoản (chỉ dành cho Quản lý)!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
             cbbTieuChiTim.SelectedIndex = 0;
             TaiDanhSachNhanVienLenCombo();
             TaiDanhSachTaiKhoan();

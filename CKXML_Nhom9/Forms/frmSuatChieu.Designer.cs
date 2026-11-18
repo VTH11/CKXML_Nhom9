@@ -41,6 +41,7 @@ namespace CKXML_Nhom9.Forms
         private DateTimePicker dtpLocNgay = null!;
         private Button btnLoc = null!;
         private Button btnHienTatCa = null!;
+        private Button btnXuatHtml = null!;
 
         private DataGridView dgvSuatChieu = null!;
 
@@ -89,6 +90,7 @@ namespace CKXML_Nhom9.Forms
             this.dtpLocNgay = new DateTimePicker();
             this.btnLoc = new Button();
             this.btnHienTatCa = new Button();
+            this.btnXuatHtml = new Button();
 
             this.dgvSuatChieu = new DataGridView();
 
@@ -274,14 +276,14 @@ namespace CKXML_Nhom9.Forms
 
             this.cbbLocPhim.DropDownStyle = ComboBoxStyle.DropDownList;
             this.cbbLocPhim.Font = new Font("Segoe UI", 9.5F);
-            this.cbbLocPhim.Location = new Point(118, 24);
+            this.cbbLocPhim.Location = new Point(115, 24);
             this.cbbLocPhim.Name = "cbbLocPhim";
-            this.cbbLocPhim.Size = new Size(305, 25);
+            this.cbbLocPhim.Size = new Size(245, 25);
             this.cbbLocPhim.TabIndex = 0;
 
             this.chkLocNgay.AutoSize = true;
             this.chkLocNgay.Font = new Font("Segoe UI", 9.5F);
-            this.chkLocNgay.Location = new Point(445, 27);
+            this.chkLocNgay.Location = new Point(372, 27);
             this.chkLocNgay.Name = "chkLocNgay";
             this.chkLocNgay.TabIndex = 1;
             this.chkLocNgay.Text = "Lọc theo ngày:";
@@ -292,19 +294,20 @@ namespace CKXML_Nhom9.Forms
             this.dtpLocNgay.Enabled = false;
             this.dtpLocNgay.Font = new Font("Segoe UI", 9.5F);
             this.dtpLocNgay.Format = DateTimePickerFormat.Custom;
-            this.dtpLocNgay.Location = new Point(560, 24);
+            this.dtpLocNgay.Location = new Point(485, 24);
             this.dtpLocNgay.Name = "dtpLocNgay";
-            this.dtpLocNgay.Size = new Size(115, 25);
+            this.dtpLocNgay.Size = new Size(105, 25);
             this.dtpLocNgay.TabIndex = 2;
 
-            CauHinhNut(this.btnLoc, "Lọc dữ liệu", Color.FromArgb(14, 116, 144), new Point(690, 19), 3, this.btnLoc_Click, 110, 32);
-            CauHinhNut(this.btnHienTatCa, "Hiện tất cả", Color.FromArgb(100, 116, 139), new Point(808, 19), 4, this.btnHienTatCa_Click, 105, 32);
+            CauHinhNut(this.btnLoc, "Lọc dữ liệu", Color.FromArgb(14, 116, 144), new Point(600, 19), 3, this.btnLoc_Click, 98, 32);
+            CauHinhNut(this.btnHienTatCa, "Hiện tất cả", Color.FromArgb(100, 116, 139), new Point(704, 19), 4, this.btnHienTatCa_Click, 98, 32);
+            CauHinhNut(this.btnXuatHtml, "Xuất HTML", Color.FromArgb(22, 163, 74), new Point(808, 19), 5, this.btnXuatHtml_Click, 106, 32);
 
             this.grpLoc.Controls.AddRange(new Control[]
             {
                 this.lblLocPhim, this.cbbLocPhim,
                 this.chkLocNgay, this.dtpLocNgay,
-                this.btnLoc, this.btnHienTatCa
+                this.btnLoc, this.btnHienTatCa, this.btnXuatHtml
             });
 
             // dgvSuatChieu

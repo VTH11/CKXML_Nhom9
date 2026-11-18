@@ -20,6 +20,13 @@ namespace CKXML_Nhom9.Forms
 
         private void frmPhongChieu_Load(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng Quản lý phòng chiếu (chỉ dành cho Quản lý)!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
             cbbTieuChiTim.SelectedIndex = 0;
             TaiDanhSachPhongChieu();
             LamMoiO();
@@ -84,8 +91,9 @@ namespace CKXML_Nhom9.Forms
             {
                 txtMaPhong.Text = XmlHelper.SinhMaTuDong("PC", TEN_FILE_XML, "maPhong", 2);
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show("Lỗi khi sinh mã phòng tự động:\n" + ex.Message, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtMaPhong.Text = "PC01";
             }
 

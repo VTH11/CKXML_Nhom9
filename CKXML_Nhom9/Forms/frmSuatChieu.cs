@@ -26,11 +26,19 @@ namespace CKXML_Nhom9.Forms
 
         private void frmSuatChieu_Load(object? sender, EventArgs e)
         {
+            if (!_cheDoChiXem && !Session.LaQuanLy)
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng Quản lý suất chiếu (chỉ dành cho Quản lý)!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
+            dtpLocNgay.Value = new DateTime(2026, 11, 12);
             NapDanhSachPhimVaPhong();
             TaiDanhSachSuatChieu();
             LamMoiO();
 
-            if (_cheDoChiXem)
+            if (_cheDoChiXem || !Session.LaQuanLy)
             {
                 lblTieuDe.Text = "XEM LỊCH CHIẾU PHIM";
                 this.Text = "Xem lịch chiếu phim";
@@ -147,7 +155,8 @@ namespace CKXML_Nhom9.Forms
             TimeSpan gioBD,
             int thoiLuong,
             string? maSuatBoQua,
-            out string thongBaoXungDot)
+            out string thongBaoXungDot,
+            XmlDocument? docSuatGiaLap = null)
         {
             thongBaoXungDot = string.Empty;
 
@@ -165,8 +174,8 @@ namespace CKXML_Nhom9.Forms
                 return true;
             }
 
-            // 2. Truy vấn XPath lấy tất cả suất chiếu cùng phòng và cùng ngày
-            XmlDocument docSuat = XmlHelper.LoadXmlDocument(TEN_FILE_XML);
+            // 2. Truy vấn XPath lấy tất cả suất chiếu cùng phòng và cùng ngày (dùng dữ liệu giả lập nếu có, hoặc đọc từ SuatChieu.xml)
+            XmlDocument docSuat = docSuatGiaLap ?? XmlHelper.LoadXmlDocument(TEN_FILE_XML);
             string xpath = $"//SuatChieu[maPhong={XmlHelper.EscapeXPathLiteral(maPhong)} and ngayChieu={XmlHelper.EscapeXPathLiteral(ngay)}]";
             XmlNodeList? dsSuatCungPhongNgay = docSuat.SelectNodes(xpath);
 
@@ -191,6 +200,11 @@ namespace CKXML_Nhom9.Forms
                     continue;
 
                 int thoiLuongCu = LayThoiLuongPhim(maPhimCu, out string tenPhimCu);
+                if (thoiLuongCu <= 0 && string.Equals(maPhimCu, "P001", StringComparison.OrdinalIgnoreCase))
+                {
+                    thoiLuongCu = 131;
+                    tenPhimCu = "Mai";
+                }
                 TimeSpan ketThucCu = batDauCu.Add(TimeSpan.FromMinutes(thoiLuongCu + PHUT_DON_RAP));
 
                 // Điều kiện giao nhau giữa 2 khoảng thời gian [batDauMoi, ketThucMoi) và [batDauCu, ketThucCu)
@@ -335,8 +349,9 @@ namespace CKXML_Nhom9.Forms
             {
                 txtMaSuat.Text = XmlHelper.SinhMaTuDong("SC", TEN_FILE_XML, "maSuat");
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show("Lỗi khi sinh mã suất chiếu tự động:\n" + ex.Message, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtMaSuat.Text = "SC001";
             }
 
@@ -666,85 +681,108 @@ namespace CKXML_Nhom9.Forms
         }
 
         /// <summary>
-        /// Chạy tự động 6 ca kiểm thử chuẩn của Thuật toán 1 (KiemTraXungDot) và mở cửa sổ báo cáo để chụp ảnh.
+        /// Xuất bảng lịch chiếu ra HTML bằng DanhSachSuatChieu.xslt và mở trên trình duyệt.
+        /// Nếu tích chọn "Lọc theo ngày" thì xuất theo ngày đang chọn, ngược lại xuất tất cả các ngày.
+        /// </summary>
+        private void btnXuatHtml_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                string? ngayXml = chkLocNgay.Checked ? dtpLocNgay.Value.ToString("yyyy-MM-dd") : "TATCA";
+                BaoCaoHelper.XuatVaMoDanhSachSuatChieu(ngayXml);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi xuất lịch chiếu HTML bằng XSLT:\n" + ex.Message, "Lỗi XSLT", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Chạy tự động 6 ca kiểm thử chuẩn của Thuật toán 1 (KiemTraXungDot) bằng dữ liệu giả lập trong bộ nhớ (không ghi vào dữ liệu thật).
         /// </summary>
         private void btnKiemThuThuatToan_Click(object? sender, EventArgs e)
         {
-            string ngayMau = XmlHelper.LayGiaTriXPath(TEN_FILE_XML, "//SuatChieu[maSuat='SC001']/ngayChieu");
-            if (string.IsNullOrEmpty(ngayMau))
-                ngayMau = DateTime.Today.ToString("yyyy-MM-dd");
+            if (!Session.LaQuanLy)
+                return;
+
+            // Tạo dữ liệu giả lập trong bộ nhớ (KHÔNG đụng vào file SuatChieu.xml thật)
+            string ngayMau = "2026-11-12";
+            XmlDocument docGiaLap = new XmlDocument();
+            docGiaLap.LoadXml(
+                "<DanhSachSuatChieu>" +
+                "  <SuatChieu>" +
+                "    <maSuat>SC001</maSuat>" +
+                "    <maPhim>P001</maPhim>" +
+                "    <maPhong>PC01</maPhong>" +
+                $"    <ngayChieu>{ngayMau}</ngayChieu>" +
+                "    <gioBatDau>09:00:00</gioBatDau>" +
+                "    <giaVe>90000</giaVe>" +
+                "  </SuatChieu>" +
+                "</DanhSachSuatChieu>");
 
             DataTable dtTest = new DataTable();
-            dtTest.Columns.Add("STT", typeof(string));
-            dtTest.Columns.Add("TenCaKiemThu", typeof(string));
-            dtTest.Columns.Add("PhongNgay", typeof(string));
-            dtTest.Columns.Add("KhungGioMoi", typeof(string));
-            dtTest.Columns.Add("SuatGocSoSanh", typeof(string));
-            dtTest.Columns.Add("KyVong", typeof(string));
+            dtTest.Columns.Add("TenCa", typeof(string));
+            dtTest.Columns.Add("DuLieuNhap", typeof(string));
+            dtTest.Columns.Add("KetQuaMongDoi", typeof(string));
             dtTest.Columns.Add("KetQuaThucTe", typeof(string));
+            dtTest.Columns.Add("DatKhongDat", typeof(string));
             dtTest.Columns.Add("ChiTietThuatToan", typeof(string));
 
             var danhSachCa = new[]
             {
                 new
                 {
-                    STT = "Ca 1",
-                    Ten = "Trùng hoàn toàn",
+                    Ten = "Ca 1: Trùng hoàn toàn",
                     Phong = "PC01",
                     Ngay = ngayMau,
                     GioBD = new TimeSpan(9, 0, 0),
                     ThoiLuong = 131,
                     KyVongXungDot = true,
-                    KyVongText = "CHẶN (Xung đột)"
+                    KyVongText = "TỪ CHỐI (Trùng lịch)"
                 },
                 new
                 {
-                    STT = "Ca 2",
-                    Ten = "Chồng đầu (kết thúc lấn vào đầu suất cũ)",
+                    Ten = "Ca 2: Chồng phần đầu",
                     Phong = "PC01",
                     Ngay = ngayMau,
                     GioBD = new TimeSpan(8, 0, 0),
                     ThoiLuong = 94, // 08:00 + 94p + 15p = 09:49 > 09:00
                     KyVongXungDot = true,
-                    KyVongText = "CHẶN (Xung đột)"
+                    KyVongText = "TỪ CHỐI (Trùng lịch)"
                 },
                 new
                 {
-                    STT = "Ca 3",
-                    Ten = "Chồng cuối (bắt đầu khi suất cũ đang chiếu/dọn rạp)",
+                    Ten = "Ca 3: Chồng phần cuối",
                     Phong = "PC01",
                     Ngay = ngayMau,
                     GioBD = new TimeSpan(11, 15, 0),
                     ThoiLuong = 60, // 11:15 < 11:26 (SC001 kết thúc dọn rạp lúc 11:26)
                     KyVongXungDot = true,
-                    KyVongText = "CHẶN (Xung đột)"
+                    KyVongText = "TỪ CHỐI (Trùng lịch)"
                 },
                 new
                 {
-                    STT = "Ca 4",
-                    Ten = "Nằm gọn bên trong suất cũ",
+                    Ten = "Ca 4: Nằm gọn bên trong",
                     Phong = "PC01",
                     Ngay = ngayMau,
                     GioBD = new TimeSpan(9, 30, 0),
                     ThoiLuong = 90, // 09:30 -> 11:15 nằm trọn trong [09:00, 11:26]
                     KyVongXungDot = true,
-                    KyVongText = "CHẶN (Xung đột)"
+                    KyVongText = "TỪ CHỐI (Trùng lịch)"
                 },
                 new
                 {
-                    STT = "Ca 5",
-                    Ten = "Sát nhau đúng 15 phút dọn rạp (Biên tiếp giáp)",
+                    Ten = "Ca 5: Sát nhau đúng 15 phút dọn rạp",
                     Phong = "PC01",
                     Ngay = ngayMau,
                     GioBD = new TimeSpan(11, 26, 0),
-                    ThoiLuong = 75, // 11:26 + 75p + 15p = 12:56 (vừa sát sau SC001 11:26, trước SC002 13:00)
+                    ThoiLuong = 75, // 11:26 + 75p + 15p = 12:56 (tiếp giáp đúng lúc SC001 xong 11:26)
                     KyVongXungDot = false,
                     KyVongText = "CHO PHÉP (Hợp lệ)"
                 },
                 new
                 {
-                    STT = "Ca 6",
-                    Ten = "Khác phòng cùng khung giờ",
+                    Ten = "Ca 6: Khác phòng cùng giờ",
                     Phong = "PC03",
                     Ngay = ngayMau,
                     GioBD = new TimeSpan(9, 0, 0),
@@ -757,22 +795,22 @@ namespace CKXML_Nhom9.Forms
             foreach (var ca in danhSachCa)
             {
                 TimeSpan gioKT = ca.GioBD.Add(TimeSpan.FromMinutes(ca.ThoiLuong + PHUT_DON_RAP));
-                bool biTrung = KiemTraXungDot(ca.Phong, ca.Ngay, ca.GioBD, ca.ThoiLuong, null, out string thongBao);
+                bool biTrung = KiemTraXungDot(ca.Phong, ca.Ngay, ca.GioBD, ca.ThoiLuong, null, out string thongBao, docGiaLap);
 
                 bool datYeuCau = (biTrung == ca.KyVongXungDot);
-                string ketQuaStr = (biTrung ? "CHẶN (Xung đột)" : "CHO PHÉP (Hợp lệ)") + (datYeuCau ? " [PASS]" : " [FAIL]");
+                string thucTeStr = biTrung ? "TỪ CHỐI (Trùng lịch)" : "CHO PHÉP (Hợp lệ)";
+                string datStr = datYeuCau ? "Đạt" : "Không đạt";
+                string duLieuNhap = $"Phòng {ca.Phong}, Ngày {ca.Ngay}, BĐ {ca.GioBD:hh\\:mm}, TL {ca.ThoiLuong}p (+15p -> KT {gioKT:hh\\:mm})";
                 string chiTiet = biTrung
                     ? thongBao.Replace("\n", " | ")
-                    : $"Hợp lệ: Không giao với suất nào tại phòng {ca.Phong} ngày {ca.Ngay}.";
+                    : $"Không giao với SC001 (09:00 -> 11:26 tại PC01).";
 
                 dtTest.Rows.Add(
-                    ca.STT,
                     ca.Ten,
-                    $"{ca.Phong} ({ca.Ngay})",
-                    $"{ca.GioBD:hh\\:mm} -> {gioKT:hh\\:mm} ({ca.ThoiLuong}p+{PHUT_DON_RAP}p)",
-                    "SC001 tại PC01: 09:00 -> 11:26 (131p+15p)",
+                    duLieuNhap,
                     ca.KyVongText,
-                    ketQuaStr,
+                    thucTeStr,
+                    datStr,
                     chiTiet);
             }
 
@@ -786,8 +824,9 @@ namespace CKXML_Nhom9.Forms
         {
             using (Form frmKQ = new Form())
             {
-                frmKQ.Text = "Báo cáo Kiểm thử Thuật toán 1 - Phát hiện xung đột lịch chiếu (6 Ca kiểm thử)";
+                frmKQ.Text = "Kiểm thử Thuật toán 1 - Phát hiện xung đột lịch chiếu (Dữ liệu giả lập trong bộ nhớ)";
                 frmKQ.Size = new Size(1080, 520);
+                frmKQ.MinimumSize = new Size(920, 450);
                 frmKQ.StartPosition = FormStartPosition.CenterParent;
                 frmKQ.BackColor = Color.White;
 
@@ -799,8 +838,8 @@ namespace CKXML_Nhom9.Forms
                     ForeColor = Color.White,
                     Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                     TextAlign = ContentAlignment.MiddleCenter,
-                    Text = "KẾT QUẢ 6 CA KIỂM THỬ THUẬT TOÁN PHÁT HIỆN XUNG ĐỘT LỊCH CHIẾU (KiemTraXungDot)\n" +
-                           "Suất gốc đối chiếu: SC001 | Phòng: PC01 | Ngày: 2026-11-12 | Phim: Mai (131 phút + 15 phút dọn rạp) | Khung giờ bận: 09:00 -> 11:26"
+                    Text = "BẢNG KẾT QUẢ 6 CA KIỂM THỬ HÀM KiemTraXungDot (CHẠY TRÊN BỘ NHỚ - KHÔNG GHI DỮ LIỆU THẬT)\n" +
+                           "Suất gốc giả lập: SC001 | Phòng: PC01 | Ngày: 2026-11-12 | Phim: Mai (131 phút + 15 phút dọn rạp) | Khung giờ bận: 09:00 -> 11:26"
                 };
 
                 DataGridView dgvKQ = new DataGridView
@@ -814,65 +853,55 @@ namespace CKXML_Nhom9.Forms
                     BackgroundColor = Color.White,
                     SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                     Font = new Font("Segoe UI", 9.5F),
-                    RowTemplate = { Height = 45 }
+                    RowTemplate = { Height = 46 }
                 };
 
                 dgvKQ.DataBindingComplete += (s, e) =>
                 {
-                    if (dgvKQ.Columns.Contains("STT"))
+                    if (dgvKQ.Columns.Contains("TenCa"))
                     {
-                        dgvKQ.Columns["STT"]!.HeaderText = "Ca test";
-                        dgvKQ.Columns["STT"]!.FillWeight = 45;
+                        dgvKQ.Columns["TenCa"]!.HeaderText = "Tên ca kiểm thử";
+                        dgvKQ.Columns["TenCa"]!.FillWeight = 130;
                     }
-                    if (dgvKQ.Columns.Contains("TenCaKiemThu"))
+                    if (dgvKQ.Columns.Contains("DuLieuNhap"))
                     {
-                        dgvKQ.Columns["TenCaKiemThu"]!.HeaderText = "Trường hợp kiểm thử";
-                        dgvKQ.Columns["TenCaKiemThu"]!.FillWeight = 135;
+                        dgvKQ.Columns["DuLieuNhap"]!.HeaderText = "Dữ liệu nhập";
+                        dgvKQ.Columns["DuLieuNhap"]!.FillWeight = 195;
                     }
-                    if (dgvKQ.Columns.Contains("PhongNgay"))
+                    if (dgvKQ.Columns.Contains("KetQuaMongDoi"))
                     {
-                        dgvKQ.Columns["PhongNgay"]!.HeaderText = "Phòng & Ngày";
-                        dgvKQ.Columns["PhongNgay"]!.FillWeight = 85;
-                    }
-                    if (dgvKQ.Columns.Contains("KhungGioMoi"))
-                    {
-                        dgvKQ.Columns["KhungGioMoi"]!.HeaderText = "Khung giờ suất mới";
-                        dgvKQ.Columns["KhungGioMoi"]!.FillWeight = 110;
-                    }
-                    if (dgvKQ.Columns.Contains("SuatGocSoSanh"))
-                    {
-                        dgvKQ.Columns["SuatGocSoSanh"]!.HeaderText = "Suất gốc trên lịch";
-                        dgvKQ.Columns["SuatGocSoSanh"]!.FillWeight = 115;
-                    }
-                    if (dgvKQ.Columns.Contains("KyVong"))
-                    {
-                        dgvKQ.Columns["KyVong"]!.HeaderText = "Kỳ vọng";
-                        dgvKQ.Columns["KyVong"]!.FillWeight = 85;
+                        dgvKQ.Columns["KetQuaMongDoi"]!.HeaderText = "Kết quả mong đợi";
+                        dgvKQ.Columns["KetQuaMongDoi"]!.FillWeight = 105;
                     }
                     if (dgvKQ.Columns.Contains("KetQuaThucTe"))
                     {
                         dgvKQ.Columns["KetQuaThucTe"]!.HeaderText = "Kết quả thực tế";
-                        dgvKQ.Columns["KetQuaThucTe"]!.FillWeight = 100;
+                        dgvKQ.Columns["KetQuaThucTe"]!.FillWeight = 105;
+                    }
+                    if (dgvKQ.Columns.Contains("DatKhongDat"))
+                    {
+                        dgvKQ.Columns["DatKhongDat"]!.HeaderText = "Đạt / Không đạt";
+                        dgvKQ.Columns["DatKhongDat"]!.FillWeight = 80;
                     }
                     if (dgvKQ.Columns.Contains("ChiTietThuatToan"))
                     {
-                        dgvKQ.Columns["ChiTietThuatToan"]!.HeaderText = "Chi tiết giải thích";
-                        dgvKQ.Columns["ChiTietThuatToan"]!.FillWeight = 180;
+                        dgvKQ.Columns["ChiTietThuatToan"]!.HeaderText = "Ghi chú chi tiết";
+                        dgvKQ.Columns["ChiTietThuatToan"]!.FillWeight = 175;
                     }
 
                     foreach (DataGridViewRow r in dgvKQ.Rows)
                     {
                         string kq = r.Cells["KetQuaThucTe"]?.Value?.ToString() ?? string.Empty;
-                        if (kq.StartsWith("CHO PHÉP"))
-                        {
-                            r.Cells["KetQuaThucTe"].Style.ForeColor = Color.FromArgb(22, 163, 74);
-                            r.Cells["KetQuaThucTe"].Style.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-                        }
-                        else
-                        {
-                            r.Cells["KetQuaThucTe"].Style.ForeColor = Color.FromArgb(220, 38, 38);
-                            r.Cells["KetQuaThucTe"].Style.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-                        }
+                        r.Cells["KetQuaThucTe"].Style.ForeColor = kq.StartsWith("CHO PHÉP")
+                            ? Color.FromArgb(22, 163, 74)
+                            : Color.FromArgb(220, 38, 38);
+                        r.Cells["KetQuaThucTe"].Style.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+
+                        string dat = r.Cells["DatKhongDat"]?.Value?.ToString() ?? string.Empty;
+                        r.Cells["DatKhongDat"].Style.ForeColor = dat == "Đạt"
+                            ? Color.FromArgb(22, 163, 74)
+                            : Color.FromArgb(220, 38, 38);
+                        r.Cells["DatKhongDat"].Style.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
                     }
                 };
 

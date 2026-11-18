@@ -16,23 +16,29 @@ namespace CKXML_Nhom9.Helpers
     public static class XmlHelper
     {
         /// <summary>
-        /// Lấy đường dẫn tuyệt đối tới file trong thư mục Data dựa trên Application.StartupPath.
+        /// Lấy đường dẫn tuyệt đối tới file trong thư mục Data dựa trên Application.StartupPath (tự tạo thư mục Data nếu thiếu).
         /// </summary>
         public static string GetDataPath(string fileName)
         {
             if (Path.IsPathRooted(fileName))
                 return fileName;
-            return Path.Combine(Application.StartupPath, "Data", fileName);
+            string dataDir = Path.Combine(Application.StartupPath, "Data");
+            if (!Directory.Exists(dataDir))
+                Directory.CreateDirectory(dataDir);
+            return Path.Combine(dataDir, fileName);
         }
 
         /// <summary>
-        /// Lấy đường dẫn tuyệt đối tới file trong thư mục Xslt dựa trên Application.StartupPath.
+        /// Lấy đường dẫn tuyệt đối tới file trong thư mục Xslt dựa trên Application.StartupPath (tự tạo thư mục Xslt nếu thiếu).
         /// </summary>
         public static string GetXsltPath(string fileName)
         {
             if (Path.IsPathRooted(fileName))
                 return fileName;
-            return Path.Combine(Application.StartupPath, "Xslt", fileName);
+            string xsltDir = Path.Combine(Application.StartupPath, "Xslt");
+            if (!Directory.Exists(xsltDir))
+                Directory.CreateDirectory(xsltDir);
+            return Path.Combine(xsltDir, fileName);
         }
 
         /// <summary>

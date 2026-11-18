@@ -299,6 +299,7 @@ namespace CKXML_Nhom9.Forms
             this.Controls.Add(this.stsTrangThai);
             this.Controls.Add(this.mnuChinh);
             this.MainMenuStrip = this.mnuChinh;
+            this.MinimumSize = new Size(880, 560);
             this.Name = "frmTrangChu";
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Trang chủ - Hệ thống quản lý rạp chiếu phim và bán vé";

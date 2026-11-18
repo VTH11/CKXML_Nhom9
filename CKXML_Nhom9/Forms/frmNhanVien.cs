@@ -21,6 +21,13 @@ namespace CKXML_Nhom9.Forms
 
         private void frmNhanVien_Load(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng Quản lý nhân viên (chỉ dành cho Quản lý)!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
             cbbTieuChiTim.SelectedIndex = 0;
             TaiDanhSachNhanVien();
             LamMoiO();
@@ -95,8 +102,9 @@ namespace CKXML_Nhom9.Forms
             {
                 txtMaNV.Text = XmlHelper.SinhMaTuDong("NV", TEN_FILE_XML, "maNV");
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show("Lỗi khi sinh mã nhân viên tự động:\n" + ex.Message, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtMaNV.Text = "NV001";
             }
 

@@ -21,6 +21,13 @@ namespace CKXML_Nhom9.Forms
 
         private void frmPhim_Load(object? sender, EventArgs e)
         {
+            if (!Session.LaQuanLy)
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng Quản lý phim (chỉ dành cho Quản lý)!", "Từ chối truy cập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
             cbbTieuChiTim.SelectedIndex = 0;
             TaiDanhSachPhim();
             LamMoiO();
@@ -90,8 +97,9 @@ namespace CKXML_Nhom9.Forms
             {
                 txtMaPhim.Text = XmlHelper.SinhMaTuDong("P", TEN_FILE_XML, "maPhim");
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show("Lỗi khi sinh mã phim tự động:\n" + ex.Message, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtMaPhim.Text = "P001";
             }
 
@@ -165,12 +173,12 @@ namespace CKXML_Nhom9.Forms
                 picApPhich.Visible = true;
                 lblKhongCoAnh.Visible = false;
             }
-            catch
+            catch (Exception ex)
             {
                 picApPhich.Visible = false;
                 lblKhongCoAnh.Visible = true;
                 lblKhongCoAnh.ForeColor = Color.FromArgb(185, 28, 28);
-                lblKhongCoAnh.Text = "File ảnh không\nđúng định dạng";
+                lblKhongCoAnh.Text = "File ảnh không\nđúng định dạng\n(" + ex.GetType().Name + ")";
             }
         }
 

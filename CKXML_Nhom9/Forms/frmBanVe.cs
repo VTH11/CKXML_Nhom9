@@ -53,7 +53,12 @@ namespace CKXML_Nhom9.Forms
 
         private void HienThiNhanVienBanVe()
         {
-            string maNV = string.IsNullOrEmpty(Session.MaNV) ? "NV001" : Session.MaNV;
+            if (string.IsNullOrWhiteSpace(Session.MaNV))
+            {
+                lblNhanVien.Text = "NV bán vé: (Chưa xác định)";
+                return;
+            }
+            string maNV = Session.MaNV.Trim();
             string hoTen = XmlHelper.LayGiaTriXPath("NhanVien.xml", $"//NhanVien[maNV={XmlHelper.EscapeXPathLiteral(maNV)}]/hoTen");
             lblNhanVien.Text = $"NV bán vé: {hoTen} ({maNV})";
         }
@@ -117,8 +122,8 @@ namespace CKXML_Nhom9.Forms
                     }
                 }
 
-                // Nếu dữ liệu mẫu đều thuộc ngày cũ thì hiển thị tất cả để dễ kiểm thử
-                HashSet<string> tapMaPhimSuDung = tapMaPhimConHan.Count > 0 ? tapMaPhimConHan : tapMaPhimTatCa;
+                // Hiển thị đầy đủ các phim có suất chiếu trong SuatChieu.xml (bao gồm các ngày mẫu 12-13/11/2026)
+                HashSet<string> tapMaPhimSuDung = tapMaPhimTatCa;
 
                 DataTable dtPhim = new DataTable();
                 dtPhim.Columns.Add("maPhim", typeof(string));
@@ -198,7 +203,7 @@ namespace CKXML_Nhom9.Forms
                 }
             }
 
-            SortedSet<string> tapNgaySuDung = tapNgayConHan.Count > 0 ? tapNgayConHan : tapNgayTatCa;
+            SortedSet<string> tapNgaySuDung = tapNgayTatCa;
 
             DataTable dtNgay = new DataTable();
             dtNgay.Columns.Add("ngayXml", typeof(string));
@@ -571,6 +576,16 @@ namespace CKXML_Nhom9.Forms
         /// </summary>
         private void btnXacNhanBanVe_Click(object? sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(Session.MaNV))
+            {
+                MessageBox.Show(
+                    "Không xác định được nhân viên, vui lòng đăng nhập lại",
+                    "Lỗi phiên đăng nhập",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
             if (string.IsNullOrEmpty(_maSuatHienTai) || _dsGheDangChon.Count == 0)
                 return;
 
@@ -641,7 +656,7 @@ namespace CKXML_Nhom9.Forms
                     }
                 }
 
-                string maNVBan = string.IsNullOrEmpty(Session.MaNV) ? "NV001" : Session.MaNV;
+                string maNVBan = Session.MaNV.Trim();
                 string thoiDiemBan = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
                 string giaVeXml = _giaVeHienTai.ToString(CultureInfo.InvariantCulture);
 
@@ -702,6 +717,27 @@ namespace CKXML_Nhom9.Forms
                     MessageBox.Show("Cảnh báo XSD:\n" + string.Join("\n", loiSauLuu), "Lỗi XSD", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
+                // Tạo file vé HTML bằng XSLT (VeXemPhim.xslt) để lấy đường dẫn hiển thị trong thông báo
+                string duongDanFileVe = string.Empty;
+                string? loiXuatHtml = null;
+                try
+                {
+                    duongDanFileVe = BaoCaoHelper.TaoFileVeXemPhimHtml(dsMaVeMoi);
+                }
+                catch (Exception exXslt)
+                {
+                    loiXuatHtml = exXslt.Message;
+                }
+
+                // Xóa danh sách ghế đang chọn và vẽ lại sơ đồ ghế
+                _dsGheDangChon.Clear();
+                VeSoDoGheDong();
+                CapNhatThongTinGheVaTien();
+
+                string dongFileVe = !string.IsNullOrEmpty(duongDanFileVe)
+                    ? $"File vé: {duongDanFileVe}"
+                    : $"File vé: (Lỗi tạo HTML: {loiXuatHtml})";
+
                 MessageBox.Show(
                     $"Đặt vé thành công!\n\n" +
                     $"- Mã vé      : {string.Join(", ", dsMaVeMoi)}\n" +
@@ -709,15 +745,24 @@ namespace CKXML_Nhom9.Forms
                     $"- Vị trí ghế : {string.Join(", ", danhSachGheMua)}\n" +
                     $"- Tổng tiền  : {DinhDangTien(tongTien)}\n" +
                     $"- Nhân viên  : {maNVBan}\n" +
-                    $"- Thời gian  : {DateTime.Now:dd/MM/yyyy HH:mm:ss}",
+                    $"- Thời gian  : {DateTime.Now:dd/MM/yyyy HH:mm:ss}\n" +
+                    dongFileVe,
                     "Bán vé thành công",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
-                // Xóa danh sách ghế đang chọn và vẽ lại sơ đồ ghế
-                _dsGheDangChon.Clear();
-                VeSoDoGheDong();
-                CapNhatThongTinGheVaTien();
+                // Mở vé HTML trên trình duyệt
+                if (!string.IsNullOrEmpty(duongDanFileVe))
+                {
+                    try
+                    {
+                        BaoCaoHelper.MoTrinhDuyet(duongDanFileVe);
+                    }
+                    catch (Exception exMo)
+                    {
+                        MessageBox.Show("Không thể tự động mở trình duyệt:\n" + exMo.Message, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
             }
             catch (Exception ex)
             {

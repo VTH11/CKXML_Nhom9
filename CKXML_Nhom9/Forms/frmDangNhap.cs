@@ -60,8 +60,27 @@ namespace CKXML_Nhom9.Forms
                 }
 
                 string maNV = tkNode.SelectSingleNode("maNV")?.InnerText.Trim() ?? string.Empty;
-                string quyenStr = tkNode.SelectSingleNode("quyenHan")?.InnerText.Trim() ?? "2";
-                int.TryParse(quyenStr, out int quyenHan);
+                string quyenStr = tkNode.SelectSingleNode("quyenHan")?.InnerText.Trim() ?? string.Empty;
+
+                if (string.IsNullOrEmpty(maNV) || !XmlHelper.KiemTraTrung("NhanVien.xml", "NhanVien", "maNV", maNV))
+                {
+                    MessageBox.Show(
+                        $"Tài khoản '{tenDangNhap}' chưa gắn mã nhân viên hợp lệ trong NhanVien.xml!",
+                        "Lỗi dữ liệu tài khoản",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (!int.TryParse(quyenStr, out int quyenHan) || (quyenHan != 1 && quyenHan != 2))
+                {
+                    MessageBox.Show(
+                        $"Tài khoản '{tenDangNhap}' có quyền hạn không hợp lệ (chỉ chấp nhận 1 = Quản lý hoặc 2 = Nhân viên)!",
+                        "Lỗi dữ liệu tài khoản",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
 
                 // Lưu thông tin vào Session
                 Session.TenDangNhap = tenDangNhap;

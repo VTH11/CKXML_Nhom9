@@ -4,7 +4,7 @@
     <maSuat>SC001</maSuat>
     <maPhim>P001</maPhim>
     <maPhong>PC01</maPhong>
-    <ngayChieu>2026-11-17</ngayChieu>
+    <ngayChieu>2026-11-12</ngayChieu>
     <gioBatDau>09:00:00</gioBatDau>
     <giaVe>90000</giaVe>
   </SuatChieu>
@@ -12,7 +12,7 @@
     <maSuat>SC002</maSuat>
     <maPhim>P003</maPhim>
     <maPhong>PC01</maPhong>
-    <ngayChieu>2026-11-17</ngayChieu>
+    <ngayChieu>2026-11-12</ngayChieu>
     <gioBatDau>13:00:00</gioBatDau>
     <giaVe>110000</giaVe>
   </SuatChieu>
@@ -20,7 +20,7 @@
     <maSuat>SC003</maSuat>
     <maPhim>P002</maPhim>
     <maPhong>PC02</maPhong>
-    <ngayChieu>2026-11-17</ngayChieu>
+    <ngayChieu>2026-11-12</ngayChieu>
     <gioBatDau>10:00:00</gioBatDau>
     <giaVe>85000</giaVe>
   </SuatChieu>
@@ -28,7 +28,7 @@
     <maSuat>SC004</maSuat>
     <maPhim>P004</maPhim>
     <maPhong>PC02</maPhong>
-    <ngayChieu>2026-11-17</ngayChieu>
+    <ngayChieu>2026-11-12</ngayChieu>
     <gioBatDau>14:00:00</gioBatDau>
     <giaVe>80000</giaVe>
   </SuatChieu>
@@ -36,7 +36,7 @@
     <maSuat>SC005</maSuat>
     <maPhim>P005</maPhim>
     <maPhong>PC03</maPhong>
-    <ngayChieu>2026-11-18</ngayChieu>
+    <ngayChieu>2026-11-13</ngayChieu>
     <gioBatDau>19:00:00</gioBatDau>
     <giaVe>120000</giaVe>
   </SuatChieu>
